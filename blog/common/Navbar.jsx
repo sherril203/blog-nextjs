@@ -16,6 +16,10 @@ const Navbar = () => {
             <li><Link href="/contact" className="hover:text-blue-200">Contact</Link></li>
           </ul>
         </nav>
+        <div className=" flex gap-2">
+          <button className='border-2 rounded p-3 hover:text-blue-200'><Link href="/signup" >Sign Up</Link></button>
+          <button className='border-2 rounded p-3 hover:text-blue-200'><Link href="/login">Login</Link></button>
+        </div>
       </div>
     </div>
   )

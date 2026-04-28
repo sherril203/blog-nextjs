@@ -2,30 +2,49 @@
 import React, { useState } from "react";
 
 const Postform = () => {
-  const API = process.env.NEXT_PUBLIC_API ;
+  const API = process.env.NEXT_PUBLIC_API;
 
-  // ✅ separate states (like RecordForm)
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [postedBy, setPostedBy] = useState("");
-  const [category, setCategory] = useState("");
-  const [image, setImage] = useState(null);
+  // ✅ single object state
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    postedBy: "",
+    category: "",
+    image: null,
+  });
+
   const [loading, setLoading] = useState(false);
+
+  // ✅ handle all text inputs
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // ✅ handle file separately
+  const handleFileChange = (e) => {
+    setForm({
+      ...form,
+      image: e.target.files[0],
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title || !description) {
+    if (!form.title || !form.description) {
       alert("Title and Description are required");
       return;
     }
 
     const data = new FormData();
-    data.append("title", title);
-    data.append("description", description);
-    data.append("posted_by", postedBy);
-    data.append("category", category);
-    if (image) data.append("image", image);
+    data.append("title", form.title);
+    data.append("description", form.description);
+    data.append("posted_by", form.postedBy);
+    data.append("category", form.category);
+    if (form.image) data.append("image", form.image);
 
     try {
       setLoading(true);
@@ -43,12 +62,14 @@ const Postform = () => {
 
       alert("Post created successfully!");
 
-      // ✅ reset
-      setTitle("");
-      setDescription("");
-      setPostedBy("");
-      setCategory("");
-      setImage(null);
+      // ✅ reset form
+      setForm({
+        title: "",
+        description: "",
+        postedBy: "",
+        category: "",
+        image: null,
+      });
 
     } catch (err) {
       console.error("ERROR:", err);
@@ -60,12 +81,10 @@ const Postform = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-xl p-8 w-[400px] space-y-4"
       >
-
         <h2 className="text-xl font-bold text-center">New Post</h2>
 
         {/* Image */}
@@ -74,7 +93,7 @@ const Postform = () => {
           <input
             type="file"
             className="border w-full p-2 rounded mt-1"
-            onChange={(e) => setImage(e.target.files[0])}
+            onChange={handleFileChange}
           />
         </div>
 
@@ -83,9 +102,10 @@ const Postform = () => {
           <label>Title</label>
           <input
             type="text"
+            name="title"
+            value={form.title}
+            onChange={handleChange}
             className="border w-full p-2 rounded mt-1"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
 
@@ -93,9 +113,10 @@ const Postform = () => {
         <div>
           <label>Description</label>
           <textarea
+            name="description"
+            value={form.description}
+            onChange={handleChange}
             className="border w-full p-2 rounded mt-1"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
           ></textarea>
         </div>
 
@@ -104,9 +125,10 @@ const Postform = () => {
           <label>Category</label>
           <input
             type="text"
+            name="category"
+            value={form.category}
+            onChange={handleChange}
             className="border w-full p-2 rounded mt-1"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
           />
         </div>
 
@@ -115,19 +137,20 @@ const Postform = () => {
           <label>Posted By</label>
           <input
             type="text"
+            name="postedBy"
+            value={form.postedBy}
+            onChange={handleChange}
             className="border w-full p-2 rounded mt-1"
-            value={postedBy}
-            onChange={(e) => setPostedBy(e.target.value)}
           />
         </div>
 
         <button
+          type="submit"
           disabled={loading}
           className="w-full bg-blue-500 text-white p-2 rounded-2xl hover:bg-blue-600 disabled:opacity-50"
         >
           {loading ? "Posting..." : "Create Post"}
         </button>
-
       </form>
     </div>
   );
