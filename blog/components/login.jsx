@@ -1,10 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; 
 
 const Login = () => {
   const API = process.env.NEXT_PUBLIC_API;
-
+ const router=useRouter()
   // ✅ single object state
   const [form, setForm] = useState({
     email: "",
@@ -27,7 +28,7 @@ const Login = () => {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API}/login`, {
+      const res = await fetch(`${API}/userlogin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +43,7 @@ const Login = () => {
       }
 
       alert("login successful!");
-
+      router.push('/')
     } catch (err) {
       console.error("ERROR:", err);
       alert(err.message || "Error login");

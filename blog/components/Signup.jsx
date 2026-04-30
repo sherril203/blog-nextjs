@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-
+import { useRouter } from 'next/navigation';
 const SignUp = () => {
   const API = process.env.NEXT_PUBLIC_API;
 
@@ -11,7 +11,7 @@ const SignUp = () => {
     email: "",
     password: "",
   });
-
+ const router=useRouter()
   const [loading, setLoading] = useState(false);
 
   // ✅ handle all inputs
@@ -22,35 +22,42 @@ const SignUp = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      setLoading(true);
+  if (!form.username || !form.email || !form.password) {
+    alert("All fields are required");
+    return;
+  }
 
-      const res = await fetch(`${API}/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form), // ✅ send full form
-      });
+  try {
+    setLoading(true);
 
-      const result = await res.json();
+    const res = await fetch(`${API}/userRegister`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
 
-      if (!res.ok) {
-        throw new Error(result.message || "Signup failed");
-      }
+    const result = await res.json();
 
-      alert("Signup successful!");
-
-    } catch (err) {
-      console.error("ERROR:", err);
-      alert(err.message || "Error signing up");
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      throw new Error(result.message || "Signup failed");
     }
-  };
+
+    alert("Signup successful!");
+
+    router.push('/login');
+
+  } catch (err) {
+    console.error("ERROR:", err);
+    alert(err.message || "Error signing up");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
