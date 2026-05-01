@@ -1,25 +1,21 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 
-const Posts = () => {
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+
+const Post = () => {
   const [posts, setPosts] = useState([]);
 
-  // ✅ fallback to avoid undefined
   const API = process.env.NEXT_PUBLIC_API;
-  console.log("API:", API);
+
   useEffect(() => {
     if (!API) return;
 
     const fetchPosts = async () => {
       try {
-        console.log("API:", API);
-
         const response = await fetch(`${API}/getall`);
-
         const result = await response.json();
-        setPosts(result.data);
-
+        setPosts(result.data || []);
       } catch (error) {
         console.error("Error fetching records:", error);
       }
@@ -28,12 +24,18 @@ const Posts = () => {
     fetchPosts();
   }, [API]);
 
+  const totalPosts = posts.length;
+
+  const totalCategories = [...new Set(posts.map(p => p.category))].length;
+
   return (
     <div>
+     
+      {/* Header */}
       <div className="p-3 flex justify-between items-center">
+        
         <p className="font-bold text-xl">Post page</p>
 
-        {/* ✅ Better button + link */}
         <Link
           href="/posts/new"
           className="p-2 text-white bg-blue-500 rounded"
@@ -41,13 +43,25 @@ const Posts = () => {
           New Post
         </Link>
       </div>
+       <div className="flex gap-6 p-3">
+        <div className="p-3 border-2 rounded">
+          <p className="font-bold text-2xl">No of posts</p>
+          <p className="font-bold text-xl">{totalPosts}</p>
+        </div>
+        <div className="p-3 border-2 rounded">
+          <p className="font-bold text-2xl">No of categories</p>
+          <p className="font-bold text-xl">{totalCategories}</p>
+        </div>
+      </div>
+
 
       <p className="p-3 font-bold text-2xl">Latest blog posts</p>
 
+      {/* Posts Grid */}
       <div className="p-3 grid grid-cols-1 md:grid-cols-3 gap-4">
         {posts.length > 0 ? (
-          posts.map((post, index) => (
-            <div key={index} className="border p-3 rounded shadow">
+          posts.map((post) => (
+            <div key={post._id} className="border p-3 rounded shadow">
 
               {post.image && (
                 <img
@@ -62,9 +76,9 @@ const Posts = () => {
                   {post.title}
                 </h2>
               </Link>
-              <h2 className="text-xl font-bold mt-2"> {post.category}</h2>
-              <p className="text-xl mt-2">{post.posted_by}</p>
 
+              <h2 className="text-xl font-bold mt-2">{post.category}</h2>
+              <p className="text-xl mt-2">{post.posted_by}</p>
             </div>
           ))
         ) : (
@@ -75,4 +89,4 @@ const Posts = () => {
   );
 };
 
-export default Posts;
+export default Post;

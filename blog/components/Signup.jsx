@@ -11,7 +11,8 @@ const SignUp = () => {
     email: "",
     password: "",
   });
- const router=useRouter()
+  const router = useRouter()
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // ✅ handle all inputs
@@ -22,7 +23,7 @@ const SignUp = () => {
     });
   };
 
- const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   if (!form.username || !form.email || !form.password) {
@@ -33,7 +34,10 @@ const SignUp = () => {
   try {
     setLoading(true);
 
-    const res = await fetch(`${API}/userRegister`, {
+    // ✅ choose correct API
+    const endpoint = isAdmin ? "/adminRegister" : "/userRegister";
+
+    const res = await fetch(`${API}${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,9 +51,10 @@ const SignUp = () => {
       throw new Error(result.message || "Signup failed");
     }
 
-    alert("Signup successful!");
+    alert(`${isAdmin ? "Admin" : "User"} signup successful!`);
 
-    router.push('/login');
+    // ✅ redirect
+    router.push("/login");
 
   } catch (err) {
     console.error("ERROR:", err);
@@ -66,7 +71,14 @@ const SignUp = () => {
         className="bg-white shadow-lg rounded-xl p-8 w-[400px] space-y-4"
       >
         <h2 className="text-xl font-bold text-center">Sign Up</h2>
-
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={isAdmin}
+            onChange={() => setIsAdmin(!isAdmin)}
+          />
+          <label>Register as Admin</label>
+        </div>
         <div>
           <label>Username</label>
           <input
@@ -108,11 +120,11 @@ const SignUp = () => {
           {loading ? "Signing up..." : "Sign Up"}
         </button>
         <p >
-        Already Registered? <Link href="/login">Login</Link>
-      </p>
+          Already Registered? <Link href="/login">Login</Link>
+        </p>
       </form>
 
-      
+
     </div>
   );
 };

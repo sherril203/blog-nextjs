@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Navbar from '../../../common/Navbar'
+import Footer from '../../../common/Footer'
 const PostPage = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -31,7 +33,9 @@ useEffect(() => {
   if (!post) return <p>Loading...</p>;
 
   return (
-    <div className="p-5">
+    <div>
+      <Navbar/>
+      <div className="p-5">
         <h1 className="text-3xl font-bold mt-4 p-3 ">{post.title}</h1>
          <p className="mt-4 text-2xl p-3">By: {post.posted_by}</p>
       {post.image && (
@@ -44,6 +48,9 @@ useEffect(() => {
       <p className="mt-2 text-gray-600 text-2xl">{post.description}</p>
      
     </div>
+    <Footer/>
+    </div>
+    
   );
 };
 

@@ -1,11 +1,10 @@
-"use client";
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+"use client"
+import React from 'react'
+import {useState,useEffect} from "react"
+import Link from "next/link"
+const Dashboard = () => {
+const [posts, setPosts] = useState([]);
 
-const Posts = () => {
-  const [posts, setPosts] = useState([]);
-
-  // ✅ fallback to avoid undefined
   const API = process.env.NEXT_PUBLIC_API;
   console.log("API:", API);
   useEffect(() => {
@@ -30,19 +29,9 @@ const Posts = () => {
 
   return (
     <div>
-      <div className="p-3 flex justify-between items-center">
-        <p className="font-bold text-xl">Post page</p>
+       <p className="text-2xl font-bold p-3">Admin Dashboard</p>
 
-        {/* ✅ Better button + link */}
-        <Link
-          href="/posts/new"
-          className="p-2 text-white bg-blue-500 rounded"
-        >
-          New Post
-        </Link>
-      </div>
-
-      <p className="p-3 font-bold text-2xl">Latest blog posts</p>
+      <p className="p-3 font-bold text-2xl">blogs posts</p>
 
       <div className="p-3 grid grid-cols-1 md:grid-cols-3 gap-4">
         {posts.length > 0 ? (
@@ -73,6 +62,6 @@ const Posts = () => {
       </div>
     </div>
   );
-};
+}
 
-export default Posts;
+export default Dashboard

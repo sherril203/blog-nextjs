@@ -1,0 +1,14 @@
+import React from 'react'
+import Nav from '../../../admin/Nav'
+import Post from '../../../admin/Post'
+
+const page = () => {
+  return (
+    <div>
+      <Nav/>
+      <Post/>
+    </div>
+  )
+}
+
+export default page
