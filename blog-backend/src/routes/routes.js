@@ -10,7 +10,9 @@ router.post('/postcontact',contactController.postcontact)
 router.get('/getcontact',contactController.getcontact)
 router.post('/post', upload.single('image'), postController.post);
 router.get('/getall',postController.getAllPosts)
-router.get('/post/:id', postController.getPostById);
+router.get('/getpost/:id', postController.getPostById);
+router.put('/updatepost/:id',upload.single('image'),postController.updateposts)
+router.delete('/deletepost/:id',postController.deletePosts)
 router.post('/userRegister',userController.UserRegister)
 router.post('/userlogin',userController.UserLogin)
 router.post('/adminRegister',adminController.adminRegister)

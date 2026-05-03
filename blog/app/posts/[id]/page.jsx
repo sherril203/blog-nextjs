@@ -9,26 +9,30 @@ const PostPage = () => {
 
   const API = process.env.NEXT_PUBLIC_API ;
 useEffect(() => {
-  if (!id || !API) return; // ✅ important
+  if (!id) return;
 
   const fetchPost = async () => {
     try {
-      const res = await fetch(`${API}/post/${id}`);
+      console.log("Fetching:", `${API}/getpost/${id}`);
+
+      const res = await fetch(`${API}/getpost/${id}`);
 
       if (!res.ok) {
+        const text = await res.text();
+        console.log("ERROR RESPONSE:", text);
         throw new Error("Failed to fetch post");
       }
 
-      const data = await res.json();
-      setPost(data.data);
+      const result = await res.json();
+      setPost(result.data);
 
     } catch (err) {
-      console.error("Fetch error:", err);
+      console.error("FETCH ERROR:", err);
     }
   };
 
   fetchPost();
-}, [id, API]);
+}, [id]);
 
   if (!post) return <p>Loading...</p>;
 

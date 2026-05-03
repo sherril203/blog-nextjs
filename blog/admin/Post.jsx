@@ -5,16 +5,16 @@ import Link from "next/link";
 
 const Post = () => {
   const [posts, setPosts] = useState([]);
-
-  const API = process.env.NEXT_PUBLIC_API;
+  const API = process.env.NEXT_PUBLIC_API ;
 
   useEffect(() => {
-    if (!API) return;
-
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`${API}/getall`);
-        const result = await response.json();
+        const res = await fetch(`${API}/getall`);
+
+        if (!res.ok) throw new Error("Failed to fetch posts");
+
+        const result = await res.json();
         setPosts(result.data || []);
       } catch (error) {
         console.error("Error fetching records:", error);
@@ -25,35 +25,52 @@ const Post = () => {
   }, [API]);
 
   const totalPosts = posts.length;
-
   const totalCategories = [...new Set(posts.map(p => p.category))].length;
+
+
+  const handleDelete = async (id) => {
+    const confirmDelete = confirm("Delete this post?");
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`${API}/deletepost/${id}`, {
+        method: "DELETE",
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || "Delete failed");
+      }
+
+  
+      setPosts((prev) => prev.filter((p) => p._id !== id));
+
+      alert("Post deleted successfully!");
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert(error.message || "Error deleting post");
+    }
+  };
 
   return (
     <div>
-     
       {/* Header */}
       <div className="p-3 flex justify-between items-center">
-        
         <p className="font-bold text-xl">Post page</p>
-
-        <Link
-          href="/posts/new"
-          className="p-2 text-white bg-blue-500 rounded"
-        >
-          New Post
-        </Link>
       </div>
-       <div className="flex gap-6 p-3">
-        <div className="p-3 border-2 rounded">
+
+      {/* Stats */}
+      <div className="flex gap-6 p-3">
+        <div className="p-3 bg-white shadow-lg rounded">
           <p className="font-bold text-2xl">No of posts</p>
           <p className="font-bold text-xl">{totalPosts}</p>
         </div>
-        <div className="p-3 border-2 rounded">
+        <div className="p-3  bg-white shadow-lg rounded">
           <p className="font-bold text-2xl">No of categories</p>
           <p className="font-bold text-xl">{totalCategories}</p>
         </div>
       </div>
-
 
       <p className="p-3 font-bold text-2xl">Latest blog posts</p>
 
@@ -79,6 +96,27 @@ const Post = () => {
 
               <h2 className="text-xl font-bold mt-2">{post.category}</h2>
               <p className="text-xl mt-2">{post.posted_by}</p>
+
+              {/* ✅ ACTION BUTTONS */}
+              <div className="flex justify-between mt-4">
+
+                <Link
+                  href={`/admin/posts/edit/${post._id}`}  // ✅ correct admin route
+                  className="bg-yellow-500 text-white px-3 py-1 rounded"
+                >
+                  Edit
+                </Link>
+
+
+                <button
+                  onClick={() => handleDelete(post._id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded"
+                >
+                  Delete
+                </button>
+
+              </div>
+
             </div>
           ))
         ) : (

@@ -44,7 +44,52 @@ const getPostById = async (req, res) => {
   }
 };
 
+
+const updateposts = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updateData = req.body;
+
+    if (req.file) {
+      updateData.image = req.file.filename;
+    }
+
+   const updated = await postModel.findByIdAndUpdate(
+  id,
+  { $set: updateData },   
+  { new: true }
+);
+
+    if (!updated) {
+      return res.status(404).send({ message: "Post not found" });
+    }
+
+    return res.status(200).send({
+      message: "Post updated successfully",
+      data: updated,
+    });
+
+  } catch (err) {
+    console.error("Error updating post:", err);
+    return res.status(500).send({ message: "Error updating post" });
+  }
+};
+
+
+
+const deletePosts=async(req,res)=>{
+  try{
+    const id=req.params.id
+    const deletedata=await postModel.findByIdAndDelete(id)
+    return res.status(200).send({message:"data deleted"})
+  }
+  catch(err){
+    return res.status(500).send({message:"data error"})
+  }
+}
+
 module.exports = {
   post,
-  getAllPosts,getPostById
+  getAllPosts,getPostById,deletePosts,updateposts
+
 };

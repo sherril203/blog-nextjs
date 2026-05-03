@@ -2,24 +2,18 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const Login = () => {
   const API = process.env.NEXT_PUBLIC_API;
-  const router = useRouter();
 
-  // ✅ form state
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  // ✅ admin toggle
   const [isAdmin, setIsAdmin] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
-  // ✅ handle input
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -27,7 +21,6 @@ const Login = () => {
     });
   };
 
-  // ✅ handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,7 +32,6 @@ const Login = () => {
     try {
       setLoading(true);
 
-      // ✅ choose correct endpoint
       const endpoint = isAdmin ? "/adminlogin" : "/userlogin";
 
       const res = await fetch(`${API}${endpoint}`, {
@@ -56,16 +48,28 @@ const Login = () => {
         throw new Error(result.message || "Login failed");
       }
 
-      // ✅ success
-      alert(`${isAdmin ? "Admin" : "User"} login successful!`);
+      // ✅ FIXED PART
+      const token = result?.data?.token;
+      const userData = result?.data?.user;
 
-      // store token
-      if (result.token) {
-        localStorage.setItem("token", result.token);
+      if (!token) {
+        throw new Error("Token not received from server");
       }
 
-      // redirect
-      router.push(isAdmin ? "/admin" : "/");
+      // ✅ store token
+      localStorage.setItem("token", token);
+
+      // ✅ store user/admin
+      if (isAdmin) {
+        localStorage.setItem("admin", JSON.stringify(userData));
+      } else {
+        localStorage.setItem("user", JSON.stringify(userData));
+      }
+
+      alert(`${isAdmin ? "Admin" : "User"} login successful!`);
+
+      // ✅ FORCE reload so Navbar updates
+      window.location.href = isAdmin ? "/admin" : "/dashboard";
 
     } catch (err) {
       console.error("ERROR:", err);
@@ -105,7 +109,6 @@ const Login = () => {
           />
         </div>
 
-        {/* ✅ Admin toggle */}
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
