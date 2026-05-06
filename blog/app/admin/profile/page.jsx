@@ -1,12 +1,12 @@
 import React from 'react'
-import Profile from '../../../admin/Profile'
+import AdminProfile from '../../../admin/AdminProfile'
 import Nav from '../../../admin/Nav'
 
 const page = () => {
   return (
     <div>
       <Nav/>
-      <Profile/>
+      <AdminProfile/>
     </div>
   )
 }

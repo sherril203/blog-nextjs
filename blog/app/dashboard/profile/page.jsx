@@ -1,11 +1,11 @@
 import React from 'react'
-import Profile from '../../../components/Profile'
+import UserProfile from '../../../components/UserProfile'
 import Navbar from '../../../common/Navbar'
 const page = () => {
   return (
     <div>
       <Navbar/>
-      <Profile/>
+      <UserProfile/>
     </div>
   )
 }
