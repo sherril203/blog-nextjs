@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 const Contact = () => {
-  const API = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6000";
+  const API = process.env.NEXT_PUBLIC_API_URL ;
 
   // ✅ single object state
   const [form, setForm] = useState({

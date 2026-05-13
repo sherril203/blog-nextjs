@@ -1,16 +1,18 @@
 import React from 'react'
-import Contact from '../../components/Contact'
+import About from '../../components/About'
 import Navbar from '../../common/Navbar'
 import Footer from '../../common/Footer'
+
 export const metadata = {
-  title: "contact",
-  description: "feedback by user",
+  title: "About",
+  description: "description of blog page",
 };
+
 const page = () => {
   return (
     <div>
-      <Navbar/>
-      <Contact/>
+        <Navbar/>
+      <About/>
       <Footer/>
     </div>
   )

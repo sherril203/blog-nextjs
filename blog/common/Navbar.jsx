@@ -28,10 +28,10 @@ const Navbar = () => {
 
         <nav>
           <ul className="flex space-x-8">
-            <li><Link href="/">Home</Link></li>
-            <li><Link href="/about">About</Link></li>
-            <li><Link href="/posts">Posts</Link></li>
-            <li><Link href="/contact">Contact</Link></li>
+            <li><Link href="/" className="hover:text-blue-200">Home</Link></li>
+            <li><Link href="/about" className="hover:text-blue-200">About</Link></li>
+            <li><Link href="/posts" className="hover:text-blue-200">Posts</Link></li>
+            <li><Link href="/contact" className="hover:text-blue-200">Contact</Link></li>
           </ul>
         </nav>
 
