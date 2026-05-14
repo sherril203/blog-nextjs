@@ -1,5 +1,5 @@
 const  {postModel} = require('../models/post.model');
-
+const mongoose=require('mongoose')
 const post = async (req, res) => {
   try {
     const postdata = req.body;
@@ -32,15 +32,35 @@ const getAllPosts = async (req, res) => {
 };
 const getPostById = async (req, res) => {
   try {
-   const post = await postModel.findById(req.params.id);
+    const { id } = req.params;
 
-    if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+    console.log("POST ID:", id);
+
+    // ✅ validate mongodb id
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        message: "Invalid post id",
+      });
     }
 
-    res.json({ data: post });
+    const post = await postModel.findById(id);
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found",
+      });
+    }
+
+    res.status(200).json({
+      data: post,
+    });
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.log(error);
+
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 

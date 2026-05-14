@@ -26,39 +26,35 @@ const SignUp = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  if (!form.username || !form.email || !form.password) {
-    alert("All fields are required");
-    return;
-  }
+  setLoading(true);
 
   try {
-    setLoading(true);
-
-    // ✅ choose correct API
-    const endpoint = isAdmin ? "/adminRegister" : "/userRegister";
-
-    const res = await fetch(`${API}${endpoint}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+    const res = await fetch(
+      `${API}/${isAdmin ? "adminRegister" : "userRegister"}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      }
+    );
 
     const result = await res.json();
 
+    console.log("RESULT:", result);
+
     if (!res.ok) {
-      throw new Error(result.message || "Signup failed");
+      throw new Error(result.message || "Registration failed");
     }
 
     alert(`${isAdmin ? "Admin" : "User"} signup successful!`);
 
-    // ✅ redirect
     router.push("/login");
 
   } catch (err) {
-    console.error("ERROR:", err);
-    alert(err.message || "Error signing up");
+    console.error(err);
+    alert(err.message);
   } finally {
     setLoading(false);
   }

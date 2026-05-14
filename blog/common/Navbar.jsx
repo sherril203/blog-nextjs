@@ -62,7 +62,11 @@ const Navbar = () => {
                       Profile
                     </p>
                   </Link>
-
+ <Link href="/dashboard/myposts">
+                    <p className="p-3 hover:bg-gray-200 cursor-pointer">
+                      My post
+                    </p>
+                  </Link>
                   <p
                     onClick={handleLogout}
                     className="p-3 hover:bg-gray-200 cursor-pointer"

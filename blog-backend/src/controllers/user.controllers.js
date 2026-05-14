@@ -12,13 +12,9 @@ const UserRegister = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
-
-    const userId = generateUserId();
-
     const newUser = new userModel({
       ...userData,
       password: hashedPassword,
-      userId,
     });
 
     await newUser.save();

@@ -1,43 +1,46 @@
-// app/posts/[id]/page.jsx
-
-import Navbar from '../../../common/Navbar'
-import Footer from '../../../common/Footer'
+import Navbar from '../../../../common/Navbar'
+import Footer from '../../../../common/Footer'
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
 
   const API = process.env.NEXT_PUBLIC_API;
 
-  const res = await fetch(`${API}/getpost/${id}`, {
-    cache: "no-store",
-  });
+  try {
+    const res = await fetch(`${API}/getpost/${id}`, {
+      cache: "no-store",
+    });
 
-  const result = await res.json();
+    const result = await res.json();
 
-  return {
-    title: result?.data?.title || "Post",
-    description: result?.data?.description || "Post details",
-  };
+    return {
+      title: result?.data?.title || "Post",
+      description:
+        result?.data?.description || "Post details",
+    };
+
+  } catch (error) {
+    return {
+      title: "Post",
+      description: "Post details",
+    };
+  }
 }
 
 async function getPost(id) {
   const API = process.env.NEXT_PUBLIC_API;
 
-  console.log("POST ID:", id);
-
   const res = await fetch(`${API}/getpost/${id}`, {
     cache: "no-store",
   });
 
-  const text = await res.text();
-
-  console.log("RESPONSE:", text);
-
   if (!res.ok) {
-    throw new Error(`Failed to fetch post: ${res.status}`);
+    throw new Error("Failed to fetch post");
   }
 
-  return JSON.parse(text).data;
+  const result = await res.json();
+
+  return result.data;
 }
 
 const PostPage = async ({ params }) => {
@@ -52,6 +55,7 @@ const PostPage = async ({ params }) => {
       <Navbar />
 
       <div className="p-5">
+
         <h1 className="text-3xl font-bold mt-4 p-3">
           {post.title}
         </h1>
@@ -71,6 +75,7 @@ const PostPage = async ({ params }) => {
         <p className="mt-2 text-gray-600 text-2xl">
           {post.description}
         </p>
+
       </div>
 
       <Footer />
