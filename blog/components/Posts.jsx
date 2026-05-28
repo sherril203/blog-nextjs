@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-
+import { MdOutlinePostAdd } from "react-icons/md";
 const Posts = () => {
   const [posts, setPosts] = useState([]);
 
@@ -30,17 +30,17 @@ const Posts = () => {
 
   return (
     <div>
-      <div className="p-3 flex justify-between items-center">
-        <p className="font-bold text-xl">Post page</p>
+     <div className="p-3 flex justify-between items-center">
+  <p className="font-bold text-2xl">Post page</p>
 
-        {/* ✅ Better button + link */}
-        <Link
-          href="/posts/new"
-          className="p-2 text-white bg-blue-500 rounded"
-        >
-          New Post
-        </Link>
-      </div>
+  <Link
+    href="/posts/new"
+    className="px-3 py-2.5 text-white bg-blue-500 rounded flex items-center gap-2"
+  >
+    <MdOutlinePostAdd className="text-2xl " />
+    <span>New Post</span>
+  </Link>
+</div>
 
       <p className="p-3 font-bold text-2xl">Latest blog posts</p>
 

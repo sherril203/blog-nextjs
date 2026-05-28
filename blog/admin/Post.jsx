@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-
+import { FaRegTrashCan } from "react-icons/fa6";
+import { MdOutlineEdit } from "react-icons/md";
 const Post = () => {
   const [posts, setPosts] = useState([]);
   const API = process.env.NEXT_PUBLIC_API ;
@@ -102,17 +103,17 @@ const Post = () => {
 
                 <Link
                   href={`/admin/posts/edit/${post._id}`}  // ✅ correct admin route
-                  className="bg-yellow-500 text-white px-3 py-1 rounded"
+                  className="bg-yellow-500 text-white px-3 py-1 rounded flex items-center gap-2 text-l"
                 >
-                  Edit
+                <MdOutlineEdit className="text-l"/>  Edit
                 </Link>
 
 
                 <button
                   onClick={() => handleDelete(post._id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded"
+                  className="bg-red-500 text-white px-3 py-1 rounded text-l flex items-center gap-2"
                 >
-                  Delete
+                <FaRegTrashCan className="text-l"/>  Delete
                 </button>
 
               </div>

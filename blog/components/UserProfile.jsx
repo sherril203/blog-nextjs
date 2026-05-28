@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-
+import { MdOutlinePostAdd } from "react-icons/md";
 const UserProfile = () => {
   const API = process.env.NEXT_PUBLIC_API;
 
@@ -132,18 +132,31 @@ const UserProfile = () => {
       {/* Posts */}
       <div className="w-full mt-8 bg-white rounded p-3">
 
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">
-            Your Posts
-          </h2>
+       <div className="flex justify-between items-center mb-4">
+  <h2 className="text-2xl font-bold">
+    Your Posts
+  </h2>
 
-          <Link
-            href="/dashboard/myposts"
-            className="rounded border-2 p-3"
-          >
-            More Posts
-          </Link>
-        </div>
+  {/* ✅ Right side buttons */}
+  <div className="flex items-center gap-3">
+
+    <Link
+      href="/posts/new"
+      className="rounded bg-blue-500 text-white p-3 flex items-center gap-2"
+    >
+      <MdOutlinePostAdd className="text-2xl flex-shrink-0" />
+      <span>Create Post</span>
+    </Link>
+
+    <Link
+      href="/dashboard/myposts"
+      className="rounded border-2 p-3 bg-gray-500 text-white"
+    >
+      More Posts
+    </Link>
+
+  </div>
+</div>
 
         {posts.length === 0 ? (
           <p>No posts found</p>

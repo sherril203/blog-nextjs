@@ -3,6 +3,16 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
+import { CgProfile } from "react-icons/cg";
+import { GrHomeRounded } from "react-icons/gr";
+import { TiInfoLarge } from "react-icons/ti";
+import { MdOutlineContactSupport } from "react-icons/md";
+import { MdOutlinePostAdd } from "react-icons/md";
+import { LuLogOut } from "react-icons/lu";
+import { MdLogin } from "react-icons/md";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { LuLayoutDashboard } from "react-icons/lu";
+
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [open, setOpen] = useState(false);
@@ -15,67 +25,165 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+
     window.location.href = "/login";
   };
 
   return (
-    <div className="bg-blue-600 text-white text-xl">
-      <div className="container mx-auto px-4 py-6 flex justify-between items-center">
+    <div className="bg-blue-600 text-white text-xl shadow-md">
+      <div className="container mx-auto px-4 py-5 flex justify-between items-center">
 
-        <Link href="/" className="font-bold text-2xl">
+        {/* Logo */}
+        <Link href="/" className="font-bold text-3xl">
           Blog
         </Link>
 
-        <nav>
-          <ul className="flex space-x-8">
-            <li><Link href="/" className="hover:text-blue-200">Home</Link></li>
-            <li><Link href="/about" className="hover:text-blue-200">About</Link></li>
-            <li><Link href="/posts" className="hover:text-blue-200">Posts</Link></li>
-            <li><Link href="/contact" className="hover:text-blue-200">Contact</Link></li>
-          </ul>
-        </nav>
+
+        {!isLoggedIn ? (
+
+          /* Guest Navbar */
+          <nav>
+            <ul className="flex items-center space-x-8">
+
+              <li>
+                <Link
+                  href="/"
+                  className="hover:text-blue-200 flex items-center gap-1"
+                >
+                  <GrHomeRounded className="text-2xl" />
+                  Home
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/about"
+                  className="hover:text-blue-200 flex items-center gap-1"
+                >
+                  <TiInfoLarge className="text-2xl" />
+                  About
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/posts"
+                  className="hover:text-blue-200 flex items-center gap-1"
+                >
+                  <MdOutlinePostAdd className="text-2xl" />
+                  Posts
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/contact"
+                  className="hover:text-blue-200 flex items-center gap-1"
+                >
+                  <MdOutlineContactSupport className="text-2xl" />
+                  Contact
+                </Link>
+              </li>
+
+            </ul>
+          </nav>
+
+        ) : (
+
+          /* Logged In Navbar */
+          <nav>
+            <ul className="flex items-center space-x-8">
+
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="hover:text-blue-200 flex items-center gap-1"
+                >
+                <LuLayoutDashboard className="text-2xl"/>  Dashboard
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/posts"
+                  className="hover:text-blue-200 flex items-center gap-1"
+                >
+                < MdOutlinePostAdd className="text-2xl"/>  Posts
+                </Link>
+              </li>
+
+            </ul>
+          </nav>
+
+        )}
 
         <div className="relative">
 
           {!isLoggedIn ? (
-            <div className="flex gap-2">
+
+            /* Guest Buttons */
+            <div className="flex gap-3">
+
               <Link href="/signup">
-                <button className="border-2 rounded p-3">Sign Up</button>
+                <button className="border-2 border-white rounded-lg px-4 py-2 hover:bg-white hover:text-blue-600 transition">
+                  Sign Up
+                </button>
               </Link>
+
               <Link href="/login">
-                <button className="border-2 rounded p-3">Login</button>
+                <button className="border-2 border-white rounded-lg px-4 py-2 flex items-center gap-2 hover:bg-white hover:text-blue-600 transition">
+                  <MdLogin className="text-2xl" />
+                  Login
+                </button>
               </Link>
+
             </div>
+
           ) : (
+
+            /* Hamburger Menu */
             <div>
+
               <button
                 onClick={() => setOpen(!open)}
-                className="text-3xl"
+                className="text-4xl hover:text-blue-200"
               >
-                ☰
+                <RxHamburgerMenu/>
               </button>
 
               {open && (
-                <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow-lg">
+                <div className="absolute right-0 mt-3 w-52 bg-white text-black rounded-xl shadow-xl overflow-hidden z-50">
+
+                  {/* Profile */}
                   <Link href="/dashboard/profile">
-                    <p className="p-3 hover:bg-gray-200 cursor-pointer">
-                      Profile
-                    </p>
+                    <div className="p-4 hover:bg-gray-100 cursor-pointer flex items-center gap-3">
+                      <CgProfile className="text-2xl" />
+                      <span>Profile</span>
+                    </div>
                   </Link>
- <Link href="/dashboard/myposts">
-                    <p className="p-3 hover:bg-gray-200 cursor-pointer">
-                      My post
-                    </p>
+
+                  {/* My Posts */}
+                  <Link href="/dashboard/myposts">
+                    <div className="p-4 hover:bg-gray-100 cursor-pointer flex items-center gap-3">
+                      <MdOutlinePostAdd className="text-2xl" />
+                      <span>My Posts</span>
+                    </div>
                   </Link>
-                  <p
+
+                  {/* Logout */}
+                  <button
                     onClick={handleLogout}
-                    className="p-3 hover:bg-gray-200 cursor-pointer"
+                    className="w-full text-left p-4   flex items-center gap-3 hover:bg-gray-100 "
                   >
-                    Logout
-                  </p>
+                    <LuLogOut className="text-2xl" />
+                    <span>Logout</span>
+                  </button>
+
                 </div>
               )}
+
             </div>
+
           )}
 
         </div>

@@ -1,10 +1,11 @@
 "use client";
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Postform = () => {
   const API = process.env.NEXT_PUBLIC_API;
 
-  // ✅ single object state
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -15,7 +16,7 @@ const Postform = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // ✅ handle all text inputs
+  // ✅ handle text inputs
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -23,7 +24,7 @@ const Postform = () => {
     });
   };
 
-  // ✅ handle file separately
+  // ✅ handle file
   const handleFileChange = (e) => {
     setForm({
       ...form,
@@ -35,7 +36,7 @@ const Postform = () => {
     e.preventDefault();
 
     if (!form.title || !form.description) {
-      alert("Title and Description are required");
+      toast.error("Title and Description are required");
       return;
     }
 
@@ -44,7 +45,10 @@ const Postform = () => {
     data.append("description", form.description);
     data.append("posted_by", form.postedBy);
     data.append("category", form.category);
-    if (form.image) data.append("image", form.image);
+
+    if (form.image) {
+      data.append("image", form.image);
+    }
 
     try {
       setLoading(true);
@@ -60,7 +64,8 @@ const Postform = () => {
         throw new Error(result.message || "Failed to create post");
       }
 
-      alert("Post created successfully!");
+      // ✅ success toast
+      toast.success("Post created successfully!");
 
       // ✅ reset form
       setForm({
@@ -73,7 +78,9 @@ const Postform = () => {
 
     } catch (err) {
       console.error("ERROR:", err);
-      alert(err.message || "Error creating post");
+
+      // ✅ error toast
+      toast.error(err.message || "Error creating post");
     } finally {
       setLoading(false);
     }
@@ -81,6 +88,14 @@ const Postform = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      
+      {/* ✅ Toast Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="colored"
+      />
+
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-xl p-8 w-[400px] space-y-4"

@@ -1,8 +1,13 @@
 "use client";
+
 import React, { useState } from "react";
 
+// ✅ Toastify imports
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Contact = () => {
-  const API = process.env.NEXT_PUBLIC_API_URL ;
+  const API = process.env.NEXT_PUBLIC_API_URL;
 
   // ✅ single object state
   const [form, setForm] = useState({
@@ -10,6 +15,8 @@ const Contact = () => {
     email: "",
     message: "",
   });
+
+  const [loading, setLoading] = useState(false);
 
   // ✅ handle all inputs
   const handleChange = (e) => {
@@ -24,23 +31,26 @@ const Contact = () => {
 
     // ✅ validation
     if (!form.name || !form.email || !form.message) {
-      alert("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
     try {
+      setLoading(true);
+
       const response = await fetch(`${API}/postcontact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form), // ✅ send full form
+        body: JSON.stringify(form),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        alert("Message sent successfully!");
+        // ✅ success toast
+        toast.success("Message sent successfully!");
 
         // ✅ reset form
         setForm({
@@ -48,22 +58,40 @@ const Contact = () => {
           email: "",
           message: "",
         });
+
       } else {
-        alert("Submission failed: " + result.message);
+        // ✅ failed toast
+        toast.error(result.message || "Submission failed");
       }
+
     } catch (error) {
       console.error("Connection Error:", error);
-      alert("Server connection error");
+
+      // ✅ server error toast
+      toast.error("Server connection error");
+
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex justify-center items-center p-10 bg-gray-100 min-h-screen">
+
+      {/* ✅ Toast Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="colored"
+      />
+
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-xl p-8 w-[400px] space-y-4"
       >
-        <h2 className="text-xl font-bold text-center">Contact Form</h2>
+        <h2 className="text-xl font-bold text-center">
+          Contact Form
+        </h2>
 
         {/* Name */}
         <div>
@@ -100,11 +128,13 @@ const Contact = () => {
           ></textarea>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded-2xl hover:bg-blue-600"
+          disabled={loading}
+          className="w-full bg-blue-500 text-white p-2 rounded-2xl hover:bg-blue-600 disabled:opacity-50"
         >
-          Submit
+          {loading ? "Submitting..." : "Submit"}
         </button>
       </form>
     </div>

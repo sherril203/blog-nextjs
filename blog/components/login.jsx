@@ -3,6 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
+// ✅ Toastify imports
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Login = () => {
   const API = process.env.NEXT_PUBLIC_API;
 
@@ -24,8 +28,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ✅ validation toast
     if (!form.email || !form.password) {
-      alert("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
@@ -48,7 +53,7 @@ const Login = () => {
         throw new Error(result.message || "Login failed");
       }
 
-      // ✅ FIXED PART
+      // ✅ token + user data
       const token = result?.data?.token;
       const userData = result?.data?.user;
 
@@ -66,14 +71,23 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(userData));
       }
 
-      alert(`${isAdmin ? "Admin" : "User"} login successful!`);
+      // ✅ success toast
+      toast.success(
+        `${isAdmin ? "Admin" : "User"} login successful!`
+      );
 
-      // ✅ FORCE reload so Navbar updates
-      window.location.href = isAdmin ? "/admin" : "/dashboard";
+      // ✅ redirect after short delay
+      setTimeout(() => {
+        window.location.href = isAdmin
+          ? "/admin"
+          : "/dashboard";
+      }, 1500);
 
     } catch (err) {
       console.error("ERROR:", err);
-      alert(err.message || "Error login");
+
+      // ✅ error toast
+      toast.error(err.message || "Error login");
     } finally {
       setLoading(false);
     }
@@ -81,11 +95,21 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
+
+      {/* ✅ Toast Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="colored"
+      />
+
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-xl p-8 w-[400px] space-y-4"
       >
-        <h2 className="text-xl font-bold text-center">Login</h2>
+        <h2 className="text-xl font-bold text-center">
+          Login
+        </h2>
 
         <div>
           <label>Email</label>
@@ -121,13 +145,19 @@ const Login = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-500 text-white p-2 rounded"
+          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
         >
           {loading ? "Logging in..." : "Login"}
         </button>
 
         <p>
-          New Account? <Link href="/signup">Sign Up</Link>
+          New Account?{" "}
+          <Link
+            href="/signup"
+            className="text-blue-500"
+          >
+            Sign Up
+          </Link>
         </p>
       </form>
     </div>

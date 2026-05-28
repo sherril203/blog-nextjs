@@ -1,7 +1,13 @@
 "use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+
+// ✅ Toastify imports
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const SignUp = () => {
   const API = process.env.NEXT_PUBLIC_API;
 
@@ -11,7 +17,9 @@ const SignUp = () => {
     email: "",
     password: "",
   });
-  const router = useRouter()
+
+  const router = useRouter();
+
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -23,50 +31,75 @@ const SignUp = () => {
     });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  setLoading(true);
-
-  try {
-    const res = await fetch(
-      `${API}/${isAdmin ? "adminRegister" : "userRegister"}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      }
-    );
-
-    const result = await res.json();
-
-    console.log("RESULT:", result);
-
-    if (!res.ok) {
-      throw new Error(result.message || "Registration failed");
+    // ✅ validation
+    if (!form.username || !form.email || !form.password) {
+      toast.error("All fields are required");
+      return;
     }
 
-    alert(`${isAdmin ? "Admin" : "User"} signup successful!`);
+    try {
+      setLoading(true);
 
-    router.push("/login");
+      const res = await fetch(
+        `${API}/${isAdmin ? "adminRegister" : "userRegister"}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
 
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
+      const result = await res.json();
+
+      console.log("RESULT:", result);
+
+      if (!res.ok) {
+        throw new Error(result.message || "Registration failed");
+      }
+
+      // ✅ success toast
+      toast.success(
+        `${isAdmin ? "Admin" : "User"} signup successful!`
+      );
+
+      // ✅ redirect after delay
+      setTimeout(() => {
+        router.push("/login");
+      }, 1500);
+
+    } catch (err) {
+      console.error(err);
+
+      // ✅ error toast
+      toast.error(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
+
+      {/* ✅ Toast Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="colored"
+      />
+
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-xl p-8 w-[400px] space-y-4"
       >
-        <h2 className="text-xl font-bold text-center">Sign Up</h2>
+        <h2 className="text-xl font-bold text-center">
+          Sign Up
+        </h2>
+
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
@@ -75,6 +108,8 @@ const handleSubmit = async (e) => {
           />
           <label>Register as Admin</label>
         </div>
+
+        {/* Username */}
         <div>
           <label>Username</label>
           <input
@@ -86,6 +121,7 @@ const handleSubmit = async (e) => {
           />
         </div>
 
+        {/* Email */}
         <div>
           <label>Email</label>
           <input
@@ -97,6 +133,7 @@ const handleSubmit = async (e) => {
           />
         </div>
 
+        {/* Password */}
         <div>
           <label>Password</label>
           <input
@@ -108,19 +145,25 @@ const handleSubmit = async (e) => {
           />
         </div>
 
+        {/* Button */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-500 text-white p-2 rounded"
+          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
         >
           {loading ? "Signing up..." : "Sign Up"}
         </button>
-        <p >
-          Already Registered? <Link href="/login">Login</Link>
+
+        <p>
+          Already Registered?{" "}
+          <Link
+            href="/login"
+            className="text-blue-500"
+          >
+            Login
+          </Link>
         </p>
       </form>
-
-
     </div>
   );
 };

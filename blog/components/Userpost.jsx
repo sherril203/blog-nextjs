@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-
+import { MdOutlinePostAdd } from "react-icons/md";
 const Userpost = () => {
   const [posts, setPosts] = useState([]);
 
@@ -61,9 +61,9 @@ const Userpost = () => {
 
         <Link
           href="/posts/new"
-          className="p-2 text-white bg-blue-500 rounded"
+          className="p-2 text-white bg-blue-500 rounded flex items-center gap-2"
         >
-          New Post
+        <MdOutlinePostAdd className="text-2xl"/>  New Post
         </Link>
       </div>
 

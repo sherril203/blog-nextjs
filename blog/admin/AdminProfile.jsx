@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
+import { FaRegTrashCan } from "react-icons/fa6";
+import { MdOutlineEdit } from "react-icons/md";
 const AdminProfile = () => {
   const [adminName, setAdminName] = useState("Admin");
   const [posts, setPosts] = useState([]);
@@ -116,11 +117,11 @@ const AdminProfile = () => {
 
                 {/* Optional actions */}
                 <div className="flex gap-2 mt-3">
-                  <button className="bg-yellow-400 px-2 py-1 rounded text-sm">
-                    Edit
+                  <button className="bg-yellow-400 px-2 py-1 rounded text-l text-white  flex items-center gap-2">
+                  <MdOutlineEdit className="text-l"/>  Edit
                   </button>
-                  <button className="bg-red-500 text-white px-2 py-1 rounded text-sm">
-                    Delete
+                  <button className="bg-red-500 text-white  text-l px-2 py-1 rounded  flex items-center gap-2">
+                  <FaRegTrashCan className="text-l"/>  Delete
                   </button>
                 </div>
 
